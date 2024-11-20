@@ -1,32 +1,39 @@
-//your JS code here. If required.
-function createRandomPromise() {
+function createRandomPromise(promiseName) {
+    const randomTime = Math.random() * 2 + 1; 
     return new Promise((resolve) => {
-        const randomTime = Math.random() * 2 + 1;
-        setTimeout(() => {
-            resolve(randomTime.toFixed(3)); 
-        }, randomTime * 1000); 
+      setTimeout(() => {
+        resolve(randomTime);
+      }, randomTime * 1000); 
     });
-}
+  }
 
-function addRow(promiseName, timeTaken) {
-    const table = document.getElementById("promiseTable");
-    const row = table.insertRow();
-    const cell1 = row.insertCell(0);
-    const cell2 = row.insertCell(1);
-    cell1.textContent = promiseName;
-    cell2.textContent = timeTaken;
-}
+  const promises = [
+    createRandomPromise('Promise 1'),
+    createRandomPromise('Promise 2'),
+    createRandomPromise('Promise 3')
+  ];
 
+  const output = document.getElementById('output');
+  output.innerHTML = '<tr><td colspan="2">Loading...</td></tr>';
 
-async function handlePromises() {
-    document.getElementById("output").textContent = "Loading...";
-    const promises = [createRandomPromise(), createRandomPromise(), createRandomPromise()];
-    const results = await Promise.all(promises);
-    document.getElementById("output").remove();
-    results.forEach((time, index) => {
-        addRow(`Promise ${index + 1}`, time);
+  Promise.all(promises)
+    .then((results) => {
+      // Clear the loading text
+      output.innerHTML = '';
+
+     
+      results.forEach((result, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>Promise ${index + 1}</td><td>${result.toFixed(3)}</td>`;
+        output.appendChild(row);
+      });
+
+      
+      const totalTime = results.reduce((sum, time) => sum + time, 0);
+      const totalRow = document.createElement('tr');
+      totalRow.innerHTML = `<td>Total</td><td>${totalTime.toFixed(3)}</td>`;
+      output.appendChild(totalRow);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
     });
-
-    const totalTime = results.reduce((sum, time) => sum + parseFloat(time), 0).toFixed(3);
-
-    addRow("Total", totalTime);
