@@ -1,39 +1,46 @@
-function createRandomPromise(promiseName) {
-    const randomTime = Math.random() * 2 + 1; 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(randomTime);
-      }, randomTime * 1000); 
-    });
-  }
+unction createRandomPromise(promiseName) {
+            const randomTime = Math.random() * 2 + 1; // Random time between 1 and 3 seconds
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve({ name: promiseName, time: randomTime });
+                }, randomTime * 1000);
+            });
+        }
 
-  const promises = [
-    createRandomPromise('Promise 1'),
-    createRandomPromise('Promise 2'),
-    createRandomPromise('Promise 3')
-  ];
+        // Creating three promises
+        const promise1 = createRandomPromise("Promise 1");
+        const promise2 = createRandomPromise("Promise 2");
+        const promise3 = createRandomPromise("Promise 3");
 
-  const output = document.getElementById('output');
-  output.innerHTML = '<tr><td colspan="2">Loading...</td></tr>';
+        // Wait for all promises to resolve
+        Promise.all([promise1, promise2, promise3]).then(results => {
+            // Remove the loading text
+            const tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = ''; // Clear the loading row
 
-  Promise.all(promises)
-    .then((results) => {
-      // Clear the loading text
-      output.innerHTML = '';
+            // Variables to store total time
+            let totalTime = 0;
 
-     
-      results.forEach((result, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td>Promise ${index + 1}</td><td>${result.toFixed(3)}</td>`;
-        output.appendChild(row);
-      });
+            // Add rows for each promise result
+            results.forEach(result => {
+                const row = document.createElement("tr");
+                const nameCell = document.createElement("td");
+                nameCell.textContent = result.name;
+                const timeCell = document.createElement("td");
+                timeCell.textContent = result.time.toFixed(3); // Limit to 3 decimal places
+                row.appendChild(nameCell);
+                row.appendChild(timeCell);
+                tableBody.appendChild(row);
+                totalTime += result.time;
+            });
 
-      
-      const totalTime = results.reduce((sum, time) => sum + time, 0);
-      const totalRow = document.createElement('tr');
-      totalRow.innerHTML = `<td>Total</td><td>${totalTime.toFixed(3)}</td>`;
-      output.appendChild(totalRow);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+            // Add the total time row
+            const totalRow = document.createElement("tr");
+            const totalNameCell = document.createElement("td");
+            totalNameCell.textContent = "Total";
+            const totalTimeCell = document.createElement("td");
+            totalTimeCell.textContent = totalTime.toFixed(3); // Limit to 3 decimal places
+            totalRow.appendChild(totalNameCell);
+            totalRow.appendChild(totalTimeCell);
+            tableBody.appendChild(totalRow);
+        });
