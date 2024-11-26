@@ -15,7 +15,7 @@ function createRandomPromise(promiseName) {
   // Wait for all promises to resolve
   Promise.all([promise1, promise2, promise3]).then(results => {
     // Remove the loading text
-    const tableBody = document.getElementById("tableBody");
+    const tableBody = document.getElementById("promiseTable");
     tableBody.innerHTML = ''; // Clear the loading row
 
     // Variables to store total time
