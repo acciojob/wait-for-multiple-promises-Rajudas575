@@ -1,9 +1,9 @@
  function createRandomPromise(promiseName) {
-        const timeTaken = Math.random() * 2 + 1; // Time between 1 and 3 seconds
+        const timeTaken = Math.random() * 2 + 1; 
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve({ name: promiseName, timeTaken: timeTaken.toFixed(3) });
-            }, timeTaken * 1000); // Convert seconds to milliseconds
+            }, timeTaken * 1000);
         });
     }
 
